@@ -7,12 +7,15 @@
  */
 
 void setup() {
-  // put your setup code here, to run once:
+  /*Initalize pins to be used to light LEDs*/
   pinMode(13, OUTPUT);
   pinMode(12, OUTPUT);
+  /****************************************/
+
+  /*Set the baud rate, begin serial, and print intial prompt*/
   Serial.begin(9600);
   Serial.println("Type 'g' into the serial monitor to blink the LEDs and 's' to stop the blinking");
-
+  /**********************************************************/
 }
 
 void loop() {
