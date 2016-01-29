@@ -39,13 +39,21 @@ void ledBlinking(char userInput)
 {
   while(userInput != 's')
     {
+      /*Turn onboard LED on and off-board led off for 2 seconds*/
       digitalWrite(13, HIGH);
       digitalWrite(12, LOW);
       delay(2000);
+      /*********************************************************/
+      
+      /*Do the opposite of above for 1 second*/
       digitalWrite(13, LOW);
       digitalWrite(12, HIGH);
       delay(1000);
+      /***************************************/
+      
+      /*Check to see if user has entered anything*/
       userInput = Serial.read();
+      /*******************************************/
     }
 
     /*Shut off LEDs*/
