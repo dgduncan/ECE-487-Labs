@@ -20,7 +20,7 @@ void setup() {
 
 void loop() {
   /*Variable Initialization and first reading*/
-  char userInput = Serial.read(); 
+  char userInput = checkSerial();
   /*******************************************/
 
   /*Check if user has input 'g' into serial monitor'*/
@@ -35,7 +35,6 @@ void loop() {
     /*********************************************/
   }
     
-
 }
 
 void ledBlinking(char userInput)
@@ -55,7 +54,7 @@ void ledBlinking(char userInput)
       /***************************************/
       
       /*Check to see if user has entered anything*/
-      userInput = Serial.read();
+      userInput = checkSerial();
       /*******************************************/
     }
 
@@ -68,3 +67,57 @@ void ledBlinking(char userInput)
     Serial.println("LEDs are now off");
     /************************************/
 }
+
+char checkSerial()
+{
+  /*Initialized character y */
+  char y;
+  /*************************/
+
+  /*Checks if there are more than 2 characters in the stream*/
+  if(Serial.available() > 2)
+  {
+    /*Notifies user that they messed up*/
+    Serial.println("Please only input 1 character");
+    /**********************************/
+
+    /*Enters method to clear serial input stream*/
+    clearSerialInput();
+    /*******************************************/
+
+    /*Return meaningless character*/
+    return 'a';
+    /******************************/
+  }
+  /**********************************************************/
+
+  else
+  {
+    /*Read first byte of the stream*/
+    y = Serial.read();
+    /*******************************/
+
+    /*Enters method to clear serial input stream*/
+    clearSerialInput();
+    /********************************************/
+
+    /*Return character containing first byte of the stream*/
+    return y;
+    /****************************************************/
+  }
+}
+
+void clearSerialInput()
+{
+  /*While loop to clear all data in the serial input stream*/
+  while(Serial.available())
+  {
+    Serial.read();
+  }
+  /*********************************************************/
+
+  /*Apparently there is some delay in clearing the data, so delay prevents a double run through of the code*/
+  delay(100);
+  /*********************************************************************************************************/
+}
+
