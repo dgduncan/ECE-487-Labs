@@ -71,7 +71,7 @@ void ledBlinking(char userInput)
 char checkSerial()
 {
   /*Initialized character y */
-  char y;
+  char firstCharacter;
   /*************************/
 
   /*Checks if there are more than 2 characters in the stream*/
@@ -94,7 +94,7 @@ char checkSerial()
   else
   {
     /*Read first byte of the stream*/
-    y = Serial.read();
+    firstCharacter = Serial.read();
     /*******************************/
 
     /*Enters method to clear serial input stream*/
@@ -102,7 +102,7 @@ char checkSerial()
     /********************************************/
 
     /*Return character containing first byte of the stream*/
-    return y;
+    return firstCharacter;
     /****************************************************/
   }
 }
