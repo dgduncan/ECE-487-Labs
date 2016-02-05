@@ -10,8 +10,10 @@ void setup()
 {
   /*Initalize pins to be used to light LEDs*/
   pinMode(13, OUTPUT);
-  pinMode(12, OUTPUT);
-  pinMode(2, INPUT);
+  pinMode(5, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(2, OUTPUT);
   /****************************************/
 
   /*Set the baud rate, begin serial, and print intial prompt*/
@@ -21,7 +23,33 @@ void setup()
 
 void loop() 
 {
-  int inputHighLow = digitalRead(2);
+  digitalWrite(2, LOW);
+  digitalWrite(3, HIGH);
+  digitalWrite(4, HIGH);
+  digitalWrite(5, HIGH);
+  delay(500);
+  digitalWrite(2, HIGH);
+  digitalWrite(3, LOW);
+  digitalWrite(4, HIGH);
+  digitalWrite(5, HIGH);
+  delay(500);
+  digitalWrite(2, HIGH);
+  digitalWrite(3, HIGH);
+  digitalWrite(4, LOW);
+  digitalWrite(5, HIGH);
+  delay(500);
+  digitalWrite(2, HIGH);
+  digitalWrite(3, HIGH);
+  digitalWrite(4, HIGH);
+  digitalWrite(5, LOW);
+  delay(500);
+  
+  
+
+  
+  
+
+  
 }
 
 void ledBlinking(int inputHighLow)
