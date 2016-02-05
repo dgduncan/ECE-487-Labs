@@ -14,6 +14,10 @@ SegmentDisplay segmentDisplay(2, 3, 4, 5, 6, 7, 8, 9);
 
 void setup() 
 {
+  /*Initialize pin13 LED*/
+  pinMode(13, OUTPUT);
+  /**********************/
+  
   /*Set the baud rate, begin serial, and print intial prompt*/
   Serial.begin(9600);
   /**********************************************************/
@@ -21,6 +25,8 @@ void setup()
 
 void loop() 
 {
+
+  segmentDisplay.testDisplay();
   
 
   
