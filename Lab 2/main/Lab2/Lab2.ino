@@ -1,21 +1,19 @@
+#include <SegmentDisplay.h>
+
 /*
  * Derek Duncan
  * CWID: 11387683
- * ECE 486
+ * ECE 487
  * Lab 2
  * 2/03/2016
  */
 
+/*Declare and Initalize the SegmentDisplay class with the appropriate pins*/
+SegmentDisplay segmentDisplay(2, 3, 4, 5, 6, 7, 8, 9);
+/*************************************************************************/
+
 void setup() 
 {
-  /*Initalize pins to be used to light LEDs*/
-  pinMode(13, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(4, OUTPUT);
-  pinMode(3, OUTPUT);
-  pinMode(2, OUTPUT);
-  /****************************************/
-
   /*Set the baud rate, begin serial, and print intial prompt*/
   Serial.begin(9600);
   /**********************************************************/
@@ -23,30 +21,6 @@ void setup()
 
 void loop() 
 {
-  digitalWrite(2, LOW);
-  digitalWrite(3, HIGH);
-  digitalWrite(4, HIGH);
-  digitalWrite(5, HIGH);
-  delay(500);
-  digitalWrite(2, HIGH);
-  digitalWrite(3, LOW);
-  digitalWrite(4, HIGH);
-  digitalWrite(5, HIGH);
-  delay(500);
-  digitalWrite(2, HIGH);
-  digitalWrite(3, HIGH);
-  digitalWrite(4, LOW);
-  digitalWrite(5, HIGH);
-  delay(500);
-  digitalWrite(2, HIGH);
-  digitalWrite(3, HIGH);
-  digitalWrite(4, HIGH);
-  digitalWrite(5, LOW);
-  delay(500);
-  
-  
-
-  
   
 
   
