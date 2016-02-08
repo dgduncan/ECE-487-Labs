@@ -16,9 +16,7 @@ int reading;
 int buttonState = HIGH;
 int lastDebounceTime;
 int lastButtonReading = HIGH;
-int lastButtonState = HIGH;
 int userInteractions = 0;
-int ledBlinkingFlag = LOW;
 
 
 
@@ -38,50 +36,12 @@ void setup()
 
 void loop() 
 {
-
   checkReading();
-
-  /*if(reading != lastButtonState)
-  {
-    Serial.println("debounce reset");
-    lastDebounceTime = millis();
-  }
-
-  if((millis() - lastDebounceTime) > 50)
-  {
-
-    if(reading != buttonState)
-    {
-      Serial.println("The button state changed");
-      buttonState = reading;
-
-      if(buttonState == LOW)
-      {
-        ledBlinkingFlag = 1;
-      }
-    }
-
-    
-  }
-
-  if(buttonState == HIGH)
-    {
-      ledBlinkingFlag = 0;
-    }
-
-  lastButtonState = reading;
-
-  ledBlinking(ledBlinkingFlag);*/
-  
-
-
-  
-
-  
 }
 
 void checkReading()
 {
+  segmentDisplay.displayHex(userInteractions);
   /*Get the current value on pin11*/
   reading = digitalRead(11);
   /********************************/
@@ -94,14 +54,16 @@ void checkReading()
   /****************************************************************/
 
   
-  if((millis() - lastDebounceTime) > 100)
+  if(((millis() - lastDebounceTime) > 200))
   {
-    
-    
     if(reading != buttonState)
     {
-      Serial.println("Button state has officially changed");
       buttonState = reading;
+
+      if(buttonState == LOW)
+      {
+        displayDataToUser();
+      }
     }
     
     blinkLED();
@@ -115,11 +77,21 @@ void checkReading()
   
 }
 
+void displayDataToUser()
+{
+  Serial.print("Decimal: ");
+  Serial.print(++userInteractions);
+  Serial.print(" HEX:");
+  Serial.println(userInteractions, HEX);
+  segmentDisplay.displayHex(userInteractions);
+
+  
+}
+
 void blinkLED()
 {
   if(buttonState == LOW)
   {
-    Serial.println("Start blink cycle");
     /*Turn onboard LED on and off-board led off for 2 seconds*/
     digitalWrite(13, HIGH);
     digitalWrite(12, LOW);
@@ -138,6 +110,4 @@ void blinkLED()
     digitalWrite(13, LOW);
     digitalWrite(12, LOW);
   }
-
-
 }
