@@ -23,11 +23,11 @@ int userInteractions = 0;
 
 void setup() 
 {
-  /*Initialize pin13 LED and pin12 as output*/
+  /*Initialize pin13 and pin12 as output, pin11 as input*/
   pinMode(13, OUTPUT);
   pinMode(12, OUTPUT);
   pinMode(11, INPUT); 
-  /******************************************/
+  /******************************************************/
   
   /*Set the baud rate, begin serial, and print intial prompt*/
   Serial.begin(9600);
@@ -36,15 +36,20 @@ void setup()
 
 void loop() 
 {
+  /*Check the reading on the button*/
   checkReading();
+  /*********************************/
 }
 
 void checkReading()
 {
+  /*Display the inital value on the seven-segment*/
   segmentDisplay.displayHex(userInteractions);
-  /*Get the current value on pin11*/
+  /***********************************************/
+  
+  /*Get the current value on pin11 i.e the state of the switch*/
   reading = digitalRead(11);
-  /********************************/
+  /************************************************************/
 
   /*If the state of the button is changing, reset the debounceTimer*/
   if(reading != lastButtonReading)
@@ -53,23 +58,32 @@ void checkReading()
   }
   /****************************************************************/
 
-  
+  /*Go into this loop 200 miliseconds after debounce is triggered*/
   if(((millis() - lastDebounceTime) > 200))
   {
+    /*If the current reading on pin11 is not the same as the state of the button*/
     if(reading != buttonState)
     {
+      /*The current state of the button is now equal to the current reading*/
       buttonState = reading;
+      /*********************************************************************/
 
-      if(buttonState == LOW)
-      {
-        displayDataToUser();
-      }
+      /*Display current data to the user*/
+      displayDataToUser();
+      /**********************************/
+
     }
-    
-    blinkLED();
-  }
+    /****************************************************************************/
 
+    /*Enter the LED loop*/
+    blinkLED();
+    /********************/
+  }
+  /***************************************************************/
+
+  /*This will prevent debounce timer from resetting every time*/
   lastButtonReading = reading;
+  /************************************************************/
   
   
 
@@ -77,16 +91,21 @@ void checkReading()
   
 }
 
+/*Method to display data to the user and to increment user button interactions*/
 void displayDataToUser()
 {
+  /*Print the decimal and hex value of user button interactions*/
   Serial.print("Decimal: ");
   Serial.print(++userInteractions);
   Serial.print(" HEX:");
   Serial.println(userInteractions, HEX);
-  segmentDisplay.displayHex(userInteractions);
+  /*************************************************************/
 
-  
+  /*Display user button interactions with the seven-segment*/
+  segmentDisplay.displayHex(userInteractions); 
+  /*********************************************************/
 }
+/******************************************************************************/
 
 void blinkLED()
 {
