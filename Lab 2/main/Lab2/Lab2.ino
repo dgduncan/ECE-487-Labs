@@ -12,14 +12,25 @@
 SegmentDisplay segmentDisplay(2, 3, 4, 5, 6, 7, 8, 9);
 /*************************************************************************/
 
+/*This is the current reading of the button*/
 int reading;
+/*******************************************/
+
+/*This is the initial state of the button*/
 int buttonState = HIGH;
+/*****************************************/
+
+/*This is the time in milliseconds that the last debounce happened*/
 int lastDebounceTime;
+/******************************************************************/
+
+/*This is the reading that happened in the previous loop through*/
 int lastButtonReading = HIGH;
+/****************************************************************/
+
+/*This is the number of times the button has changed states*/
 int userInteractions = 0;
-
-
-
+/***********************************************************/
 
 void setup() 
 {
@@ -107,8 +118,10 @@ void displayDataToUser()
 }
 /******************************************************************************/
 
+/*Method that will either blink the LEDs or will shut them off*/
 void blinkLED()
 {
+  /*If the current state of the button is LOW, begin to blink the LEDs*/
   if(buttonState == LOW)
   {
     /*Turn onboard LED on and off-board led off for 2 seconds*/
@@ -123,10 +136,14 @@ void blinkLED()
     delay(1000);
     /***************************************/
   }
+  /********************************************************************/
 
+  /*If it is not, make sure the LEDs are off*/
   else
   {
     digitalWrite(13, LOW);
     digitalWrite(12, LOW);
   }
+  /******************************************/
 }
+/***************************************************************/
