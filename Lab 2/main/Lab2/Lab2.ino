@@ -99,7 +99,7 @@ void checkReading()
   /****************************************************************/
 
   /*Go into this loop 200 miliseconds after debounce is triggered*/
-  if(((millis() - lastDebounceTime) > 200))
+  if(((millis() - lastDebounceTime) > 50))
   {
     /*If the current reading on pin11 is not the same as the state of the button*/
     if(reading != buttonState)
