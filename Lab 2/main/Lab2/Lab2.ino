@@ -12,20 +12,41 @@
 SegmentDisplay segmentDisplay(2, 3, 4, 5, 6, 7, 8, 9);
 /*************************************************************************/
 
-/*This is the current reading of the button*/
-int reading;
+
+/*Flag to tell when the LEDs should be blinking*/
+boolean blinkFlag;
+/***********************************************/
+
+/*The interval I want the LEDs to blink for*/
+long blinkInterval = 1000;
 /*******************************************/
 
 /*This is the initial state of the button*/
-int buttonState = HIGH;
+int buttonState;
 /*****************************************/
+
+/*This is the reading that happened in the previous loop through*/
+int lastButtonReading = HIGH;
+/****************************************************************/
 
 /*This is the time in milliseconds that the last debounce happened*/
 int lastDebounceTime;
 /******************************************************************/
 
-/*This is the reading that happened in the previous loop through*/
-int lastButtonReading = HIGH;
+/*The current state of the LED*/
+int ledState;
+/******************************/
+
+/*The time in milliseconds that the previous blink occured*/
+unsigned long previousMillis = 0;
+/**********************************************************/
+
+/*This is the current reading of the button*/
+int reading;
+/*******************************************/
+
+/*The number of times the counter hit max and "rollover" occures*/
+int rollover = 0;
 /****************************************************************/
 
 /*This is the number of times the button has changed states*/
@@ -43,6 +64,10 @@ void setup()
   /*Set the baud rate, begin serial, and print intial prompt*/
   Serial.begin(9600);
   /**********************************************************/
+
+  /*Check the initial conditions of the circuit*/
+  checkInitialConditions();
+  /*********************************************/
 }
 
 void loop() 
@@ -50,6 +75,10 @@ void loop()
   /*Check the reading on the button*/
   checkReading();
   /*********************************/
+
+  /*Go through blink loop*/
+  blinkLED();
+  /***********************/
 }
 
 void checkReading()
@@ -79,6 +108,15 @@ void checkReading()
       buttonState = reading;
       /*********************************************************************/
 
+      if(buttonState == LOW)
+      {
+        blinkFlag = true;
+      }
+      else
+      {
+        blinkFlag = false;
+      }
+
       /*Display current data to the user*/
       displayDataToUser();
       /**********************************/
@@ -86,20 +124,12 @@ void checkReading()
     }
     /****************************************************************************/
 
-    /*Enter the LED loop*/
-    blinkLED();
-    /********************/
   }
   /***************************************************************/
 
   /*This will prevent debounce timer from resetting every time*/
   lastButtonReading = reading;
   /************************************************************/
-  
-  
-
-  
-  
 }
 
 /*Method to display data to the user and to increment user button interactions*/
@@ -108,42 +138,97 @@ void displayDataToUser()
   /*Print the decimal and hex value of user button interactions*/
   Serial.print("Decimal: ");
   Serial.print(++userInteractions);
-  Serial.print(" HEX:");
-  Serial.println(userInteractions, HEX);
+  Serial.print(" HEX: ");
+  Serial.print(userInteractions, HEX);
+  Serial.print(" Rollover: ");//Because Dr. Ricks mentioned
+  Serial.println(rollover);
   /*************************************************************/
 
   /*Display user button interactions with the seven-segment*/
   segmentDisplay.displayHex(userInteractions); 
   /*********************************************************/
+
+  checkIfRollover();
 }
 /******************************************************************************/
 
-/*Method that will either blink the LEDs or will shut them off*/
+/*Method to handle the blinking of the LEDs*/
 void blinkLED()
 {
-  /*If the current state of the button is LOW, begin to blink the LEDs*/
-  if(buttonState == LOW)
+  /*Enter if the blink flag is set to true*/
+  if(blinkFlag)
   {
-    /*Turn onboard LED on and off-board led off for 2 seconds*/
-    digitalWrite(13, HIGH);
-    digitalWrite(12, LOW);
-    delay(1000);
-    /*********************************************************/
+    /*Current time in Milliseconds*/
+    unsigned long currentMillis = millis();
+    /******************************/
+    
+    /*Enter if more than 1 seconds has passed*/
+    if (currentMillis - previousMillis >= blinkInterval)
+    {
+      /*Save the current state*/
+      previousMillis = currentMillis;
+      /************************/
   
-    /*Do the opposite of above for 1 second*/
-    digitalWrite(13, LOW);
-    digitalWrite(12, HIGH);
-    delay(1000);
-    /***************************************/
+      /*Switch the states of the LEDs*/
+      if (ledState == LOW)
+      {
+        ledState = HIGH;
+      } 
+      else 
+      {
+        ledState = LOW;
+      }
+      /********************************/
+  
+      /*Change pin states*/
+      digitalWrite(12, ledState);
+      digitalWrite(13, !ledState);
+      /*******************/
+    }
   }
-  /********************************************************************/
+  /***************************************/
 
-  /*If it is not, make sure the LEDs are off*/
+  
+  /*Make sure the LEDs are off*/
   else
   {
-    digitalWrite(13, LOW);
     digitalWrite(12, LOW);
+    digitalWrite(13, LOW);
   }
-  /******************************************/
+  /****************************/
+  
 }
-/***************************************************************/
+
+/*Method to check if rollover occurs*/
+void checkIfRollover()
+{
+  /*Add to rollover and reset user interactions*/
+  if(userInteractions == 15)
+  {
+    rollover++;
+    userInteractions = -1;
+  }
+  /*********************************************/
+}
+/************************************/
+
+/*Method to check the initial conditions of the circuit*/
+void checkInitialConditions()
+{
+  /*Set current state of button*/
+  buttonState = digitalRead(11);
+  /*****************************/
+
+  /*Choose correct state based on button state*/
+  if(buttonState == LOW)
+  {
+    blinkFlag = true;
+  }
+  else
+  {
+    blinkFlag = false;
+  }
+  /*********************************************/
+}
+/**********************************************/
+
