@@ -63,6 +63,7 @@ void setup()
   
   /*Set the baud rate, begin serial, and print intial prompt*/
   Serial.begin(9600);
+  Serial.println("Switch toggle to begin counting");
   /**********************************************************/
 
   /*Check the initial conditions of the circuit*/
