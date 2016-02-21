@@ -6,8 +6,6 @@
  * 2/21/2016
  */
 
-int startOfRead;
-
 void setup() 
 {
   Serial.begin(9600);
@@ -29,15 +27,33 @@ void loop()
 
 void beginAnalogReads()
 {
+  int analogData;
+  int readTime;
+  int startOfRead;
+  
   for(int i = 0; i <= 30; i++)
   {
     startOfRead = millis();
     
-    analogRead(4);
+    analogData = analogRead(4);
 
-    
-    
+    readTime = millis() - startOfRead;
+
+    displayResults();
   }
+}
+
+void displayResults(int readSequence, int analogData, int readTime)
+{
+  Serial.print("#");
+  Serial.print(readSequence);
+  Serial.print("  ");
+  Serial.print("Digital Value = ");
+  Serial.print((HEX) analogData);
+  Serial.print("  ");
+  Serial.print("Time = ");
+  Serial.print(readTime);
+  Serial.println(" usecs");
 }
 
 char checkSerial()
