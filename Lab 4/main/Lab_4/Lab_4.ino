@@ -36,6 +36,10 @@ void beginAnalogReads()
 
   /*The time in millis when the read was first begun*/
   unsigned long startOfRead;
+
+  /*Prompt user that readings are about to take place*/
+  Serial.println("A series of 30 measurements are about to begin");
+  Serial.println("");
   
   for(int i = 1; i <= 30; i++)
   {
@@ -43,7 +47,7 @@ void beginAnalogReads()
     startOfRead = micros();
 
     /*The data returned from the analog pin*/
-    analogData = analogRead(4);
+    analogData = analogRead(0);
 
     /*The time it took for the arduino to read from the pin*/
     readTime = micros() - startOfRead;
