@@ -6,11 +6,14 @@
  * 2/21/2016
  */
 
+ unsigned long timesToAverage[30];
+
 void setup() 
 {
   /*Open Serial to begin communication and prompt user for input*/
   Serial.begin(9600);
   Serial.println("Please input the character 'c' into the serial input, other inputs will be rejected");
+  Serial.println("");
 }
 
 void loop() 
@@ -19,7 +22,7 @@ void loop()
   if(checkSerial() == 'c')
   {
     /*Begin the 30 analog reads*/
-    beingAnalogReads();
+    beginAnalogReads();
   }
 }
 
@@ -29,21 +32,29 @@ void beginAnalogReads()
   int analogData;
 
   /*The total time in milliseconds that it took to read from analog pin*/
-  int readTime;
+  unsigned long readTime;
 
   /*The time in millis when the read was first begun*/
-  int startOfRead;
+  unsigned long startOfRead;
   
-  for(int i = 0; i < 30; i++)
+  for(int i = 1; i <= 30; i++)
   {
-    startOfRead = millis();
-    
+    /*Mark the beginning of the analog read*/
+    startOfRead = micros();
+
+    /*The data returned from the analog pin*/
     analogData = analogRead(4);
 
-    readTime = millis() - startOfRead;
+    /*The time it took for the arduino to read from the pin*/
+    readTime = micros() - startOfRead;
 
-    displayResults();
+    /*A running count of the times that it took to read*/
+    timesToAverage[i] = readTime;
 
+    /*Display the results to the user from each read*/
+    displayResults(i, analogData, readTime);
+
+    /*Delay the read time so that the pin does not get overloaded*/
     delay(500-readTime);
   }
 }
@@ -51,15 +62,38 @@ void beginAnalogReads()
 /*Displaying data in accordance to lab parameters*/
 void displayResults(int readSequence, int analogData, int readTime)
 {
+  /*Required output as per lab parameters*/
   Serial.print("#");
   Serial.print(readSequence);
   Serial.print("  ");
   Serial.print("Digital Value = ");
-  Serial.print((HEX) analogData);
+  Serial.print(analogData, HEX);
   Serial.print("  ");
   Serial.print("Time = ");
   Serial.print(readTime);
   Serial.println(" usecs");
+
+  /*If this is the final read, display the avergage and prompt user again for input*/
+  if(readSequence == 30)
+  {
+    /*The average value from all 30 reads*/
+    unsigned long average;
+
+    /*Count all of the times from the array*/
+    for(int i = 0; i < 30; i++)
+    {
+      average += timesToAverage[i];
+    }
+
+    /*Output average time and prompt user for another input*/
+    Serial.println("");
+    Serial.println("Average conversion time: ");
+    Serial.print((average / 30));
+    Serial.println(" usecs");
+    Serial.println("");
+    Serial.println("Please input the character 'c' into the serial input, other inputs will be rejected");
+    Serial.println("");
+  }
 }
 
 char checkSerial()
