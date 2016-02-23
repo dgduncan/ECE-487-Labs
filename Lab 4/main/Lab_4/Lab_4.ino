@@ -19,11 +19,7 @@ void setup()
 void loop() 
 {
   /*Only act if a 'c' is read on the serial*/
-  if(checkSerial() == 'c')
-  {
-    /*Begin the 30 analog reads*/
-    beginAnalogReads();
-  }
+  checkSerial();
 }
 
 void beginAnalogReads()
@@ -38,6 +34,7 @@ void beginAnalogReads()
   unsigned long startOfRead;
 
   /*Prompt user that readings are about to take place*/
+  Serial.println("");
   Serial.println("A series of 30 measurements are about to begin");
   Serial.println("");
   
@@ -59,7 +56,7 @@ void beginAnalogReads()
     displayResults(i, analogData, readTime);
 
     /*Delay the read time so that the pin does not get overloaded*/
-    delay(500-readTime);
+    delay(600-readTime);
   }
 }
 
@@ -100,8 +97,11 @@ void displayResults(int readSequence, int analogData, int readTime)
   }
 }
 
-char checkSerial()
+void checkSerial()
 {
+  /*Delay to allow all characters to be read into serial monitor*/
+  delay(100);
+  
   /*Initialized character y */
   char firstCharacter;
 
@@ -109,16 +109,15 @@ char checkSerial()
   if(Serial.available() > 2)
   {
     /*Notifies user that they messed up*/
-    Serial.println("Please only input 1 character");
+    Serial.println("Error : Multiple characters detected, please use correct input");
 
     /*Enters method to clear serial input stream*/
     clearSerialInput();
 
-    /*Return meaningless character*/
-    return 'a';
   }
 
-  else
+  /*Check if there is a single character availabe in the serial*/
+  else if(Serial.available() > 1)
   {
     /*Read first byte of the stream*/
     firstCharacter = Serial.read();
@@ -126,8 +125,17 @@ char checkSerial()
     /*Enters method to clear serial input stream*/
     clearSerialInput();
 
-    /*Return character containing first byte of the stream*/
-    return firstCharacter;
+    /*detect a non 'c' character*/
+    if (firstCharacter != 'c')
+    {
+      /*Prompt user that error has occured*/
+      Serial.println("Error : non 'c' character detected, please use correct input");
+    }
+    else
+    {
+      /*Begin readings if 'c' has been read on serial*/
+      beginAnalogReads();
+    }
   }
 }
 
