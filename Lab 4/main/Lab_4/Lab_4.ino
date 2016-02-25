@@ -6,7 +6,7 @@
  * 2/21/2016
  */
 
- unsigned long timesToAverage[30];
+unsigned long timesToAverage[30];
 
 void setup() 
 {
