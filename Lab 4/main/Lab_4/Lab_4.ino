@@ -94,6 +94,8 @@ void displayResults(int readSequence, int analogData, int readTime)
     Serial.println("");
     Serial.println("Please input the character 'c' into the serial input, other inputs will be rejected");
     Serial.println("");
+
+    clearSerialInput();
   }
 }
 

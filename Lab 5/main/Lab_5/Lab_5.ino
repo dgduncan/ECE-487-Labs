@@ -68,7 +68,11 @@ void usePortManipulation()
     /*Start the analog read*/
     ADCSRA |= 0b01000000;
 
-    pollForChange(startOfRead, readTime);
+    while((ADCSRA & 0b00010000) != 16);
+
+    Serial.println(micros() - startOfRead);
+
+    //pollForChange(startOfRead, readTime);
 
     delay(500);
   }
@@ -79,8 +83,11 @@ void usePortManipulation()
 
 void pollForChange(unsigned long startOfRead, unsigned long readTime)
 {
+  while((ADCSRA & 0b00010000) != 16);
 
-  if((ADCSRA & 0b00010000) == 16)
+  Serial.println(micros() - startOfRead);
+
+  /*if((ADCSRA & 0b00010000) == 16)
   {
     readTime = micros() - startOfRead;
 
@@ -94,7 +101,7 @@ void pollForChange(unsigned long startOfRead, unsigned long readTime)
   else
   {
     pollForChange(startOfRead, readTime);
-  }
+  }*/
   
 }
 
