@@ -10,30 +10,24 @@ void setup()
 {
   /*Open Serial connection and display user prompt*/
   Serial.begin(9600);
+  Serial.println("Input an 'a' to read the analog pin using analogRead().");
+  Serial.println("Input a 'b' to read the analog pin using direct port manipulation.");
 
+  /*Set up the analog to digital converter*/
   adcSetUp();
 }
 
 void loop() 
 {
-
-  Serial.println(ADCSRA);
-  delay(1000);
-  ADCSRA |= 0b01000000;
-  Serial.println(ADCSRA);
- 
-
- 
-
   
-  //Serial.println(x);
 
 }
 
 void adcSetUp()
 {
-  Serial.println(ADCSRB);
-  ADCSRB |= 0b00000000;
+  /*Set the ADC mux to use AVcc as the reference*/
+  ADMUX |= 0b01000000;
+  
   /*Turn on the ADC on the Atmega2560 to prepare for reads*/
   ADCSRA |= 0b10000000;
 }
